@@ -1,0 +1,7 @@
+transactions.csv
+portfolio.xlsx
+*.xlsx
+*.csv
+*.pdf
+__pycache__/
+venv/
