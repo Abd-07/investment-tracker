@@ -16,12 +16,12 @@ emptyDF = pd.DataFrame()
 emptyDF.to_excel(writer, sheet_name='TRANSACTIONS-2025', index=False)
 writer.close()
 
-#Define your desired columns
+#Define columns
 columns = [
     "TYPE", "NAME", "ACCOUNT TYPE", "PLATFORM", "DATE", "TIME (UTC)", "TIME (UK)", "ACTION",
     "CURRENCY", "AMOUNT PER UNIT", "QUANTITY",
     "FEES", "COMPANY SECTOR", "TOTAL PRICE/COST (WITHOUT FEES)",
-    "TOTAL CONSIDERATION", "PROFIT/LOSS (APPROX)", "NOTES"
+    "TOTAL CONSIDERATION", "PROFIT/LOSS (APPROX)", "USD/GBP","NOTES"
 ]
 
 #Load the existing file (using pandas + openpyxl engine)

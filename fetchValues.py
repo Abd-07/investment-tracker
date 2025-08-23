@@ -6,6 +6,7 @@ import re
 from datetime import datetime
 import pytz
 
+#read csv file
 igTransactions = pd.read_csv('transactions.csv', index_col=False)
 igTransactions.reset_index(drop=True, inplace=True)
 
@@ -18,8 +19,9 @@ def enterVal(fieldName,value):
 
 noOfRows = igTransactions.shape[0]
 
+#iterate over each transaction in the original sheet
 for transaction in range(noOfRows):
-    qty = 1
+    qty = 1.0
     currRow = igTransactions.loc[transaction]
 
     description = currRow[2]
@@ -75,6 +77,17 @@ for transaction in range(noOfRows):
     if float(gbp_pAndL) < 0:
         amtPerUnit *= -1
 
+    match_USD_GBP = re.search(r"converted at\s*([0-9]+(?:\.[0-9]+)?)", description, re.IGNORECASE)
+    if match_USD_GBP != None:
+        rate_USD_GBP = float(match_USD_GBP.group(1))
+        rate_USD_GBP = round(rate_USD_GBP,4)
+
+    totalPriceNoFee = float(amtPerUnit) * float(qty)
+
+    ttlFees = 0
+
+    totalConsideration = totalPriceNoFee + ttlFees
+
     fieldsInRow = {
         "DATE": currRow[0], #date
         #"period": currRow[3], #period
@@ -86,7 +99,7 @@ for transaction in range(noOfRows):
         #Useful fields
         "NOTES": currRow[1], #summary
         "AMOUNT PER UNIT": amtPerUnit,
-        "FEES": "N/D",
+        "FEES": ttlFees,
 
         "NAME": transactName, #description
 
@@ -104,7 +117,11 @@ for transaction in range(noOfRows):
         "TIME (UTC)": dateTimeUtc, #dateUTC
         "TIME (UK)": ukTime,
         "opendateUTC": currRow[14], #opendateUTC
-        "CURRENCY": currRow[15] #currCode
+        "CURRENCY": currRow[15], #currCode
+
+        "USD/GBP": rate_USD_GBP,
+        "TOTAL PRICE/COST (WITHOUT FEES)": totalPriceNoFee,
+        "TOTAL CONSIDERATION": totalConsideration
     }
 
     for col in columns:
