@@ -19,6 +19,8 @@ def enterVal(fieldName,value):
 
 noOfRows = igTransactions.shape[0]
 
+rate_USD_GBP = 0.0
+
 #iterate over each transaction in the original sheet
 for transaction in range(noOfRows):
     qty = 1.0
@@ -29,7 +31,11 @@ for transaction in range(noOfRows):
     transactNameAddr = re.search(r'^(.*?)\s*-\s*',description)
     if transactNameAddr == None:
         transactNameAddr = re.search(r'^(.*?)\s*\(',description)
-    transactName = transactNameAddr.group(1)
+    elif transactNameAddr != None:
+        transactName = transactNameAddr.group(1)
+    else:
+        transactName = None
+        
 
     dateTimeUTC = currRow[13]
 
